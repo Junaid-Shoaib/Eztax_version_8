@@ -80,18 +80,30 @@ class NoticeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'client_id' => ['required'],
-            'tax_authority' => ['required'],
-            'tax_office' => ['required'],
-            'notice_heading' => ['required'],
-            'commissioner' => [],
-            'tax_year' => ['required'],
-            'receiving_date' => ['required'],
-            'due_date' => [],
-            'hearing_date' => [],
-            'notice' => ['required','max:1024','mimes:pdf,jpg'],
-        ]);
+       $request->validate([
+    'client_id' => ['required'],
+    'tax_authority' => ['required'],
+    'tax_office' => ['required'],
+    'notice_heading' => ['required'],
+    'commissioner' => [], // Optional field
+    'tax_year' => ['required'],
+    'receiving_date' => ['required'],
+    'due_date' => [],     // Optional field
+    'hearing_date' => [], // Optional field
+    'notice' => ['required', 'file', 'max:1024', 'mimes:pdf,jpg'],
+    ], [
+        'client_id.required' => 'The Client field is required.',
+        'tax_authority.required' => 'The Tax Authority field is required.',
+        'tax_office.required' => 'The Tax Office field is required.',
+        'notice_heading.required' => 'The Notice Heading field is required.',
+        'tax_year.required' => 'The Tax Year field is required.',
+        'receiving_date.required' => 'The Receiving Date field is required.',
+        'notice.required' => 'The Notice file is required.',
+        'notice.file' => 'The Notice must be a valid file.',
+        'notice.max' => 'The Notice file may not be greater than 1MB.',
+        'notice.mimes' => 'The Notice must be a file of type: pdf or jpg.',
+    ]);
+
         $notice = Notice::create([
             'client_id' => $request->client_id,
             'tax_authority' => $request->tax_authority,
@@ -157,7 +169,19 @@ class NoticeController extends Controller
             'hearing_date' => [],
             'reply' => ['nullable', 'file', 'max:1024', 'mimes:pdf,jpg'],
             'order' => ['nullable', 'file', 'max:1024', 'mimes:pdf,jpg'],
+        ], [
+            'client_id.required' => 'The Client field is required.',
+            'tax_authority.required' => 'The Tax Authority field is required.',
+            'tax_office.required' => 'The Tax Office field is required.',
+            'notice_heading.required' => 'The Notice Heading field is required.',
+            'tax_year.required' => 'The Tax Year field is required.',
+            'receiving_date.required' => 'The Receiving Date field is required.',
+            'reply.max' => 'The Reply file may not be greater than 1MB.',
+            'order.max' => 'The Order file may not be greater than 1MB.',
+            'reply.mimes' => 'The Reply must be a file of type: pdf, jpg.',
+            'order.mimes' => 'The Order must be a file of type: pdf, jpg.',
         ]);
+
 
         $oldClient = Client::find($notice->client_id);
         $newClient = Client::find($request->client_id);
