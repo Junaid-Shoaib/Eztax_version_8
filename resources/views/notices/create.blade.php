@@ -45,6 +45,7 @@
                                             <option value='KPKRA'>KPKRA</option>
                                             <option value='BRA'>BRA</option>
                                             <option value='AJKRA'>AJKRA</option>
+                                            <option value='Income Tax Tribunal'>Income Tax Tribunal</option>
                                         </select>
                                     </div>
                                 </div>
@@ -57,6 +58,7 @@
                                             <option value=''>Select Tax Office</option>
                                             <option value='LTO'>LTO</option>
                                             <option value='RTO'>RTO</option>
+                                            <option value='MTO'>MTO</option>
                                             <option value='CTO'>CTO</option>
                                             <option value='CIR(A)'>CIR(A)</option>
                                             <option value='ATIR'>ATIR</option>

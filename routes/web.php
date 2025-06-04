@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('notices/create', [NoticeController::class, 'create'])->name('notices.create');
     Route::post('notices/store', [NoticeController::class, 'store'])->name('notices.store');
     Route::get('notices/edit/{notice}', [NoticeController::class, 'edit'])->name('notices.edit');
+    Route::get('notices/show/{id}', [NoticeController::class, 'show'])->name('notices.show');
     Route::put('notices/update/{notice}', [NoticeController::class, 'update'])->name('notices.update');
     Route::get('notices/change/{notice}', [NoticeController::class, 'change'])->name('notices.change');
     Route::delete('notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy');

@@ -54,7 +54,8 @@ class NoticeController extends Controller
                 })
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                $btn =  '<a class="btn btn-sm btn-secondary" href="'.route('notices.edit', $row->id) .'">Edit</a>';
+                $btn =  '<a class="btn btn-sm btn-secondary m-1" href="'.route('notices.show', $row->id) .'">View</a>';
+                $btn .=  '<a class="btn btn-sm btn-primary m-1" href="'.route('notices.edit', $row->id) .'">Edit</a>';
                 $btn .= 
                 '<form action="'. route('notices.destroy', $row->id) .'" method="POST" style="display:inline;">
                     <input type="hidden" name="_token" value="'. csrf_token() .'">
@@ -127,6 +128,15 @@ class NoticeController extends Controller
         return Redirect::route('notices')->with('success', 'Notice created.');
     }
 
+    public function show($id)
+    {
+        $notice = Notice::find($id);
+        if(!$notice){
+            abort(404);
+        }
+       $clients = Client::where('user_id',auth()->user()->id)->get();
+        return view('notices.show', compact('notice','clients'));
+    }
     public function edit(Notice $notice)
     {
        $clients = Client::where('user_id',auth()->user()->id)->get();
@@ -217,8 +227,8 @@ class NoticeController extends Controller
             'commissioner' => $request->commissioner,
             'tax_year' => $request->tax_year,
             'receiving_date' => $request->receiving_date,
-            'due_date' => $request->due_date ?? '',
-            'hearing_date' => $request->hearing_date ?? '',
+            'due_date' => $request->due_date ?? null,
+            'hearing_date' => $request->hearing_date ?? null,
         ]);
 
         return redirect()->route('notices')->with('success', 'Notice updated successfully.');
