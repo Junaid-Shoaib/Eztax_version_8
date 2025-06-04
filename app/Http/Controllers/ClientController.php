@@ -76,8 +76,14 @@ class ClientController extends Controller
             'category'=> 'required',
         ]);
 
-        if (Storage::disk('public')->exists(auth()->user()->id . '/' . $client->name)) {
-            Storage::disk('public')->move(auth()->user()->id . '/' . $client->name, auth()->user()->id . '/' . ucfirst($request->name));
+        $oldPath = auth()->user()->id . '/' . $client->name;
+        $newPath = auth()->user()->id . '/' . ucfirst($request->name);
+
+        if (
+            Storage::disk('public')->exists($oldPath) &&
+            !Storage::disk('public')->exists($newPath)
+        ) {
+            Storage::disk('public')->move($oldPath, $newPath);
         }
         $client->update([
             'name' => ucfirst($request->name),
