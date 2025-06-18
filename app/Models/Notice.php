@@ -33,5 +33,9 @@ class Notice extends Model
     {
         return $this->belongsTo(Client::class);
     }
+    public function noticeDocuments()
+    {
+        return $this->hasMany(NoticeDocument::class);
+    }
 
 }

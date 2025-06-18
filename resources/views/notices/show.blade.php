@@ -120,93 +120,69 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-4">
-                                    <div class="form-group mt-3">
-                                        <label for="reply">Notice: </label>
-                                        @if ($notice->notice_path)
-                                            @php
-                                                $filePath = 'storage/' . $notice->notice_path;
-                                                
-                                                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                                                $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                                            @endphp
+                            <div class="row mt-4">
+                               @php
+                                    $fileBoxes = [];
 
-                                            @if (in_array(strtolower($extension), $imageExtensions))
-                                                <p><a href="{{ asset($filePath) }}" target="_blank">
-                                                    <img src="{{ asset($filePath) }}" alt="{{ $notice->notice_name }}" style="height:100px; width:100px;">
+                                    // Add Main Notice
+                                    if ($notice->notice_path) {
+                                        $fileBoxes[] = [
+                                            'label' => 'Notice',
+                                            'path' => 'storage/' . $notice->notice_path,
+                                            'name' => basename($notice->notice_path),
+                                            'date' => optional($notice->created_at)->format('d/m/Y')
+                                        ];
+                                    }
+
+                                    // Add reply, order, received from noticeDocuments
+                                    foreach (['reply' => 'Reply', 'order' => 'Order', 'received' => 'Received'] as $type => $label) {
+                                        $docs = $notice->noticeDocuments->where('type', $type);
+                                        foreach ($docs as $doc) {
+                                            $fileBoxes[] = [
+                                                'label' => $label,
+                                                'path' => 'storage/' . $doc->path,
+                                                'name' => $doc->name ?? basename($doc->path),
+                                                'date' => optional($doc->created_at)->format('d/m/Y')
+                                            ];
+                                        }
+                                    }
+
+                                    $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+                                @endphp
+
+                                @forelse ($fileBoxes as $file)
+                                    <div class="col-md-12 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                            <div>
+                                                <strong>{{ $file['label'] }}:</strong><br>
+                                                <span>{{ $file['name'] }}</span><br>
+                                                <small><i class="fa fa-calendar"></i> {{ $file['date'] }}</small>
+                                            </div>
+                                            <div>
+                                                @php
+                                                    $ext = pathinfo($file['path'], PATHINFO_EXTENSION);
+                                                @endphp
+
+                                                @if (in_array(strtolower($ext), $imageExtensions))
+                                                    <a href="{{ asset($file['path']) }}" target="_blank">
+                                                        <img src="{{ asset($file['path']) }}" alt="{{ $file['name'] }}" style="height: 100px; width: 100px; object-fit: cover;">
                                                     </a>
-                                                </p>
-                                            @else
-                                            <p>
-                                                <a href="{{ asset($filePath) }}" target="_blank">
-                                                    View File ({{ strtoupper($extension) }})
-                                                </a>
-                                            </p>
-                                            @endif
-                                        @else
-                                            <p class="text-muted">No file uploaded</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group mt-3">
-                                        <label for="reply">Reply: </label>
-                                        @if ($notice->reply_path)
-                                            @php
-                                                $filePath = 'storage/' . $notice->reply_path;
-                                                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                                                $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                                            @endphp
-
-                                            @if (in_array(strtolower($extension), $imageExtensions))
-                                                <p>
-                                                    <a href="{{ asset($filePath) }}" target="_blank">
-                                                    
-                                                        <img src="{{ asset($filePath) }}" alt="{{ $notice->reply_name }}" style="height:100px; width:100px;">
+                                                @else
+                                                    <a class="btn btn-outline-primary btn-sm" href="{{ asset($file['path']) }}" target="_blank">
+                                                        View File ({{ strtoupper($ext) }})
                                                     </a>
-                                                </p>
-                                            @else
-                                            <p>
-                                                <a href="{{ asset($filePath) }}" target="_blank">
-                                                    View File ({{ strtoupper($extension) }})
-                                                </a>
-                                            </p>
-                                            @endif
-                                        @else
-                                            <p class="text-muted">No file uploaded</p>
-                                        @endif
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group mt-3">
-                                        <label for="order">Order: </label>
-                                              @if ($notice->order_path)
-                                            @php
-                                                $filePath = 'storage/' . $notice->order_path;
-                                                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                                                $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                                            @endphp
+                                @empty
+                                    <div class="col-md-12">
+                                        <p class="text-muted">No files uploaded.</p>
+                                    </div>
+                                @endforelse
 
-                                            @if (in_array(strtolower($extension), $imageExtensions))
-                                            <p>    
-                                                <a href="{{ asset($filePath) }}" target="_blank">
-                                                    <img src="{{ asset($filePath) }}" alt="{{ $notice->order_name }}" style="height:100px; width:100px;">
-                                                </a>
-                                            </p>
-                                            @else
-                                            <p>
-                                                <a href="{{ asset($filePath) }}" target="_blank">
-                                                        View File ({{ strtoupper($extension) }})
-                                                </a>
-                                            </p>    
-                                            @endif
-                                        @else
-                                            <p class="text-muted">No file uploaded</p>
-                                        @endif
-                                    </div>
-                                </div>
                             </div>
+
                             
 
                             
