@@ -92,7 +92,7 @@ class NoticeController extends Controller
             'receiving_date' => ['required'],
             'due_date' => [],     // Optional field
             'hearing_date' => [], // Optional field
-            'notice' => ['required', 'file', 'max:1024', 'mimes:pdf,jpg'],
+            'notice' => ['required', 'file', 'max:10000', 'mimes:pdf,jpg'],
         ], [
             'client_id.required' => 'The Client field is required.',
             'tax_authority.required' => 'The Tax Authority field is required.',
@@ -289,9 +289,9 @@ class NoticeController extends Controller
             'receiving_date' => ['required'],
             'due_date' => [],
             'hearing_date' => [],
-            'reply' => ['nullable', 'file', 'max:1024', 'mimes:pdf,jpg'],
-            'order' => ['nullable', 'file', 'max:1024', 'mimes:pdf,jpg'],
-            'received' => ['nullable', 'file', 'max:1024', 'mimes:pdf,jpg'],
+            'reply' => ['nullable', 'file', 'max:10000', 'mimes:pdf,jpg'],
+            'order' => ['nullable', 'file', 'max:10000', 'mimes:pdf,jpg'],
+            'received' => ['nullable', 'file', 'max:10000', 'mimes:pdf,jpg'],
         ], [
             'client_id.required' => 'The Client field is required.',
             'tax_authority.required' => 'The Tax Authority field is required.',

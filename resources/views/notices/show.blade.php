@@ -129,7 +129,7 @@
                                         $fileBoxes[] = [
                                             'label' => 'Notice',
                                             'path' => 'storage/' . $notice->notice_path,
-                                            'name' => basename($notice->notice_path),
+                                            'name' => $notice->notice_heading,
                                             'date' => optional($notice->created_at)->format('d/m/Y')
                                         ];
                                     }
